@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qatarian Stocks Exchange Market</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="assets/logoo.png">
+
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-left">
+            <div class="company-info">
+                <h1 class="company-name">Qatarian Stocks Exchange Market</h1>
+                <h2 class="catchphrase">Track Oil Markets. Secure Your Future.</h2>
+                <p class="tagline">Real-time oil stock insights with secure financial management</p>
+            </div>
+            <div class="animated-background">
+                <canvas id="background-canvas"></canvas>
+                <div class="oil-derrick"></div>
+            </div>
+        </div>
+        
+        <div class="login-right">
+            <div class="login-card">
+                <div class="login-header">
+                    <h3>Secure Login</h3>
+                    <div class="secure-indicator">
+                        <i class="fas fa-lock"></i>
+                        <span>Secure Connection</span>
+                    </div>
+                </div>
+                
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="username">
+                            <i class="fas fa-user"></i> Username
+                        </label>
+                        <input type="text" id="username" placeholder="Enter your username" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="password">
+                            <i class="fas fa-key"></i> Password
+                        </label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" placeholder="Enter your password" required>
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        <span class="btn-text">Sign In</span>
+                        <div class="spinner hidden" id="loginSpinner"></div>
+                    </button>
+                    
+                    <!-- <div class="demo-credentials">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Example: <strong>Ja</strong> / <strong>password123</strong></p>
+                    </div> -->
+                </form>
+                
+                <div class="login-footer">
+                    <p><i class="fas fa-shield-alt"></i> Your data is encrypted and secure</p>
+                </div>
+            </div>
+            
+            <div class="error-message hidden" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>Invalid credentials. Please try again.</span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Initialize login page
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginSpinner = document.getElementById('loginSpinner');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Toggle password visibility
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            // Handle form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // Show loading spinner
+                loginBtn.querySelector('.btn-text').classList.add('hidden');
+                loginSpinner.classList.remove('hidden');
+                
+                // Simulate API call delay
+                setTimeout(() => {
+                    const success = Auth.login(username, password);
+                    
+                    if (success) {
+                        // Store user in localStorage
+                        localStorage.setItem('currentUser', username);
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('loginTime', new Date().getTime());
+                        
+                        // Redirect to dashboard
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        // Show error
+                        errorMessage.classList.remove('hidden');
+                        loginBtn.querySelector('.btn-text').classList.remove('hidden');
+                        loginSpinner.classList.add('hidden');
+                        
+                        // Hide error after 5 seconds
+                        setTimeout(() => {
+                            errorMessage.classList.add('hidden');
+                        }, 5000);
+                    }
+                }, 1500);
+            });
+            
+            // Draw animated background
+            const canvas = document.getElementById('background-canvas');
+            if (canvas.getContext) {
+                const ctx = canvas.getContext('2d');
+                canvas.width = canvas.parentElement.offsetWidth;
+                canvas.height = canvas.parentElement.offsetHeight;
+                
+                // Simple animated line chart
+                function drawChart() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Draw grid
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                    ctx.lineWidth = 1;
+                    
+                    // Vertical lines
+                    for (let i = 0; i < canvas.width; i += 50) {
+                        ctx.beginPath();
+                        ctx.moveTo(i, 0);
+                        ctx.lineTo(i, canvas.height);
+                        ctx.stroke();
+                    }
+                    
+                    // Horizontal lines
+                    for (let i = 0; i < canvas.height; i += 50) {
+                        ctx.beginPath();
+                        ctx.moveTo(0, i);
+                        ctx.lineTo(canvas.width, i);
+                        ctx.stroke();
+                    }
+                    
+                    // Draw random line chart
+                    ctx.strokeStyle = 'rgba(0, 200, 255, 0.7)';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    
+                    let x = 0;
+                    let y = canvas.height / 2;
+                    ctx.moveTo(x, y);
+                    
+                    for (x = 0; x < canvas.width; x += 5) {
+                        y = canvas.height / 2 + Math.sin(x * 0.03) * 50 + Math.random() * 20;
+                        ctx.lineTo(x, y);
+                    }
+                    
+                    ctx.stroke();
+                }
+                
+                // Initial draw and animation
+                drawChart();
+                setInterval(drawChart, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

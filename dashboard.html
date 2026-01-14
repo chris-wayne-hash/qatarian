@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oil Market Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="assets/logoo.png">
+
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="dashboard-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <button class="hamburger" id="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="dashboard-title">Oil Market Dashboard</h1>
+                <div class="user-welcome" id="userWelcome">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Welcome, <span id="usernameDisplay">Guest</span></span>
+                </div>
+            </div>
+            
+            <div class="nav-right">
+                <button class="irs-btn" id="irsBtn">
+                    <i class="fas fa-university"></i>
+                    <span>IRS Portal</span>
+                </button>
+                
+                
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu hidden" id="mobileMenu">
+        <a href="#" class="mobile-nav-item active">
+            <i class="fas fa-chart-line"></i>
+            <span>Market Overview</span>
+        </a>
+        <!--<a href="#" class="mobile-nav-item">
+            <i class="fas fa-briefcase"></i>
+            <span>Portfolio</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+            <i class="fas fa-newspaper"></i>
+            <span>News</span>
+        </a>
+        <a href="#" class="mobile-nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>-->
+    </div>
+    
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <a href="#" class="sidebar-item active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Market Overview</span>
+                </a>
+                <!--<a href="#" class="sidebar-item">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Portfolio</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-newspaper"></i>
+                    <span>News</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-history"></i>
+                    <span>History</span>
+                </a>
+                <a href="#" class="sidebar-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>-->
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="session-timer">
+                    <span> <span id="sessionTimer"></span></span>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <!-- Metrics Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <h3>WTI Crude</h3>
+                        <i class="fas fa-oil-can"></i>
+                    </div>
+                    <div class="metric-value" id="wtiPrice">$78.42</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+1.24%</span>
+                    </div>
+                    <div class="metric-label">Live Price</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <h3>Brent Crude</h3>
+                        <i class="fas fa-gas-pump"></i>
+                    </div>
+                    <div class="metric-value" id="brentPrice">$82.15</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+0.89%</span>
+                    </div>
+                    <div class="metric-label">Live Price</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <h3>Top Gainer</h3>
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="metric-value" id="topGainer">XOM</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+3.2%</span>
+                    </div>
+                    <div class="metric-label">Exxon Mobil</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <h3>Market Status</h3>
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="metric-value">OPEN</div>
+                    <div class="metric-status active">
+                        <div class="status-dot"></div>
+                        <span>Active</span>
+                    </div>
+                    <div class="metric-label"></div>
+                </div>
+            </div>
+            
+            <!-- Update the charts section -->
+<div class="charts-section">
+    <div class="section-header">
+        <h2>Market Charts</h2>
+        <div class="chart-controls">
+            <button class="time-btn active" data-period="1D">1D</button>
+            <button class="time-btn" data-period="1W">1W</button>
+            <button class="time-btn" data-period="1M">1M</button>
+            <button class="time-btn" data-period="3M">3M</button>
+        </div>
+    </div>
+    
+    <div class="charts-grid">
+        <!-- Line Chart -->
+        <div class="chart-container">
+            <h3>Oil Price Trend</h3>
+            <div class="chart-responsive-wrapper">
+                <div class="chart-wrapper">
+                    <canvas id="lineChart"></canvas>
+                </div>
+                <div class="chart-mobile-info">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bar Chart -->
+        <div class="chart-container">
+            <h3>Daily Volume</h3>
+            <div class="chart-responsive-wrapper">
+                <div class="chart-wrapper">
+                    <canvas id="barChart"></canvas>
+                </div>
+                <div class="chart-mobile-info">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pie Chart -->
+        
+    </div>
+</div>
+
+
+
+<!-- Add this after the charts-section and before the ticker-section -->
+<!-- International Stock Holders Section -->
+<div class="stock-holders-section">
+    <div class="section-header">
+        <h2><i class="fas fa-globe-americas"></i> International Stock Holders</h2>
+        <div class="stats-summary">
+            <div class="stat-item">
+                <span class="stat-label">Total Value:</span>
+                <span class="stat-value">$42.3M</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Active Holders:</span>
+                <span class="stat-value">1,247</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="stock-holders-grid">
+        <!-- Major Holders Card -->
+        <div class="holders-card major-holders">
+            <div class="card-header">
+                <h3><i class="fas fa-crown"></i> Major Institutional Holders</h3>
+                <div class="card-badge">Top 5</div>
+            </div>
+            <div class="holders-list">
+                <div class="holder-item">
+                    <div class="holder-info">
+                        <div class="holder-name">BlackRock Inc.</div>
+                        <div class="holder-location">USA</div>
+                    </div>
+                    <div class="holder-stats">
+                        <div class="holding-amount">$8.2M</div>
+                        <div class="holding-percent">19.4%</div>
+                    </div>
+                </div>
+                <div class="holder-item">
+                    <div class="holder-info">
+                        <div class="holder-name">Vanguard Group</div>
+                        <div class="holder-location">USA</div>
+                    </div>
+                    <div class="holder-stats">
+                        <div class="holding-amount">$6.5M</div>
+                        <div class="holding-percent">15.4%</div>
+                    </div>
+                </div>
+                <div class="holder-item">
+                    <div class="holder-info">
+                        <div class="holder-name">State Street Corp</div>
+                        <div class="holder-location">USA</div>
+                    </div>
+                    <div class="holder-stats">
+                        <div class="holding-amount">$4.8M</div>
+                        <div class="holding-percent">11.3%</div>
+                    </div>
+                </div>
+                <div class="holder-item">
+                    <div class="holder-info">
+                        <div class="holder-name">Qatar Investment Auth</div>
+                        <div class="holder-location">QATAR</div>
+                    </div>
+                    <div class="holder-stats">
+                        <div class="holding-amount">$3.9M</div>
+                        <div class="holding-percent">9.2%</div>
+                    </div>
+                </div>
+                <div class="holder-item">
+                    <div class="holder-info">
+                        <div class="holder-name">Saudi Aramco</div>
+                        <div class="holder-location">KSA</div>
+                    </div>
+                    <div class="holder-stats">
+                        <div class="holding-amount">$3.1M</div>
+                        <div class="holding-percent">7.3%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="total-holdings">
+                    <span>Total Institutional:</span>
+                    <strong>$26.5M (62.6%)</strong>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Geographical Distribution Card -->
+        <div class="holders-card geo-distribution">
+            <div class="card-header">
+                <h3><i class="fas fa-map-marked-alt"></i> Geographical Distribution</h3>
+                <div class="card-badge">By Region</div>
+            </div>
+            <div class="geo-chart">
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #1a3a8f;"></span>
+                        <span class="legend-label">North America</span>
+                        <span class="legend-value">48%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #00c853;"></span>
+                        <span class="legend-label">Middle East</span>
+                        <span class="legend-value">32%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #ff3d00;"></span>
+                        <span class="legend-label">Europe</span>
+                        <span class="legend-value">12%</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background: #ffc107;"></span>
+                        <span class="legend-label">Asia Pacific</span>
+                        <span class="legend-value">8%</span>
+                    </div>
+                </div>
+                <div class="chart-visual">
+                    <div class="pie-chart">
+                        <div class="pie-slice" style="--percent: 48; --color: #1a3a8f;"></div>
+                        <div class="pie-slice" style="--percent: 32; --color: #00c853;"></div>
+                        <div class="pie-slice" style="--percent: 12; --color: #ff3d00;"></div>
+                        <div class="pie-slice" style="--percent: 8; --color: #ffc107;"></div>
+                        <div class="pie-center">
+                            <span class="center-value">100%</span>
+                            <span class="center-label">Global</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="growth-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>International holdings up 12.5% YoY</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity Card -->
+        <div class="holders-card recent-activity">
+            <div class="card-header">
+                <h3><i class="fas fa-exchange-alt"></i> Recent Activity</h3>
+                <div class="card-badge">Last 24h</div>
+            </div>
+            <div class="activity-feed">
+                <div class="activity-item">
+                    <div class="activity-icon buy">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">BlackRock increased position</div>
+                        <div class="activity-meta">+$450K • 2 hours ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon sell">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">JPMorgan reduced holding</div>
+                        <div class="activity-meta">-$280K • 5 hours ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon neutral">
+                        <i class="fas fa-minus"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">New holder from UAE entered</div>
+                        <div class="activity-meta">Abu Dhabi Inv • 8 hours ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon buy">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">Qatar Investment increased</div>
+                        <div class="activity-meta">+$320K • 12 hours ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon info">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-title">Institutional ownership threshold</div>
+                        <div class="activity-meta">>60% • Regulatory update</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="view-all-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>View Full Activity Log</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+            <!-- Stock Ticker -->
+            <div class="ticker-section">
+                <div class="section-header">
+                    <h2>Live Oil Stocks</h2>
+                   
+                </div>
+                
+                <div class="stock-ticker">
+                    <div class="ticker-content" id="tickerContent">
+                        <!-- Ticker items will be inserted by JS -->
+                    </div>
+                </div>
+                
+                <div class="stocks-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Company</th>
+                                <th>Price</th>
+                                <th>Change</th>
+                                <th>Volume</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stocksTableBody">
+                            <!-- Stocks will be inserted by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+        <!-- IRS Modal -->
+    <div class="modal-overlay hidden" id="irsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-university"></i> IRS Portal Access</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+        
+         <div class="modal-body">
+                <div class="token-instructions">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <p><strong>Single-Use IRS Access Token Required</strong></p>
+                        <p class="small-text">Enter one of the available IRS tokens to access the secure financial portal.</p>
+                    </div>
+                </div>
+            
+                <!-- Token Status Display -->
+                <!-- <div class="token-status-card">
+                    <h4><i class="fas fa-key"></i> Token Status</h4>
+                    <div class="token-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Available Tokens:</span>
+                            <span class="stat-value available" id="availableTokens">5</span>
+                        </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Used Tokens:</span>
+                        <span class="stat-value used" id="usedTokens">0</span>
+                    </div>
+                </div>
+                <div class="available-tokens-list" id="availableTokensList">
+                     Available tokens will be listed here
+                </div>
+                </div>-->
+            
+            <div class="token-form">
+                <label for="tokenInput">
+                    <i class="fas fa-key"></i> Enter IRS Token
+                </label>
+                <input type="text" id="tokenInput" placeholder="Enter IRS Access Token Here">
+                <div class="hint">Tokens are single-use only</div>
+                
+                <div class="modal-buttons">
+                    <button class="btn-secondary" id="cancelToken">Cancel</button>
+                    <button class="btn-primary" id="submitToken">Verify & Access</button>
+                </div>
+            </div>
+            
+            <!-- Token Feedback -->
+            <div class="token-feedback">
+                <div class="token-error hidden" id="tokenError">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span id="errorMessage">Invalid or already used token. Please try another.</span>
+                </div>
+                
+                <div class="token-success hidden" id="tokenSuccess">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Token accepted! Redirecting to IRS Portal...</span>
+                </div>
+            </div>
+            
+            <!-- Demo Reset Button (only for development) -->
+            <!-- <div class="demo-reset">
+                <button class="btn-small" id="resetTokensBtn">
+                    <i class="fas fa-redo"></i>
+                    Reset All Tokens (Demo Only)
+                </button>
+                <p class="small-text">This will reset all tokens for demonstration purposes.</p>
+            </div> -->
+        </div>
+    </div>
+</div>
+    
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/stocks.js"></script>
+    <script src="js/charts.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!Auth.isAuthenticated()) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Display username
+            // Display username
+const currentUser = Auth.getCurrentUser();
+if (currentUser) {
+    // Display just the username or fullName, not the entire object
+    document.getElementById('usernameDisplay').textContent = currentUser.fullName || currentUser.username || 'Guest';
+} else {
+    document.getElementById('usernameDisplay').textContent = 'Guest';
+}
+            // Initialize modules
+            Stocks.init();
+            Charts.init();
+            
+            // Setup event listeners
+            setupDashboardEvents();
+            startSessionTimer();
+        });
+        
+       function setupDashboardEvents() {
+    // Hamburger menu
+    document.getElementById('hamburger').addEventListener('click', function() {
+        document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+    
+    // Logout button
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        Auth.logout();
+        window.location.href = 'index.html';
+    });
+    
+    // IRS button
+    document.getElementById('irsBtn').addEventListener('click', function() {
+        //updateTokenDisplay();
+        document.getElementById('irsModal').classList.remove('hidden');
+    });
+    
+    // Close modal
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    document.getElementById('cancelToken').addEventListener('click', closeModal);
+    
+    // Submit token - ONLY ONE EVENT LISTENER
+    document.getElementById('submitToken').addEventListener('click', function() {
+    const tokenInput = document.getElementById('tokenInput');
+    const tokenError = document.getElementById('tokenError');
+    const tokenSuccess = document.getElementById('tokenSuccess');
+    const errorMessage = document.getElementById('errorMessage');
+    const submitBtn = document.getElementById('submitToken');
+    
+    // Clear previous messages
+    tokenError.classList.add('hidden');
+    tokenSuccess.classList.add('hidden');
+    
+    const token = tokenInput.value.trim();
+    
+    if (!token) {
+        errorMessage.textContent = 'Please enter a token';
+        tokenError.classList.remove('hidden');
+        return;
+    }
+    
+    const isValid = Auth.verifyIRSToken(token);
+    
+    if (isValid) {
+        // Show success message
+        tokenSuccess.classList.remove('hidden');
+        tokenInput.disabled = true;
+        submitBtn.disabled = true;
+        
+        // Activate token session
+        Auth.activateTokenSession();
+        
+        // Redirect after delay
+        setTimeout(() => {
+            closeModal();
+            window.location.href = 'irs-portal.html';
+        }, 1500);
+    } else {
+        // Show error with specific message
+        const tokenEntry = Auth.irsTokens.find(t => t.token === token);
+        if (tokenEntry && tokenEntry.used) {
+            const usedTime = tokenEntry.usedAt ? new Date(tokenEntry.usedAt).toLocaleDateString() : 'previously';
+            errorMessage.textContent = `Token already used by ${tokenEntry.issuedTo || 'another user'} on ${usedTime}`;
+        } else {
+            errorMessage.textContent = 'Invalid token. Please check and try again.';
+        }
+        
+        tokenError.classList.remove('hidden');
+        tokenInput.classList.add('error');
+        
+        // Shake animation
+        tokenInput.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+            tokenInput.style.animation = '';
+        }, 500);
+    }
+});    
+    // Reset tokens button (for demo purposes)
+    document.getElementById('resetTokensBtn').addEventListener('click', function() {
+    if (confirm('Reset all IRS tokens? This will make all tokens available again for demonstration purposes.')) {
+        Auth.resetAllTokens();
+        
+        // Show success message
+        const tokenSuccess = document.getElementById('tokenSuccess');
+        tokenSuccess.querySelector('span').textContent = 'All tokens have been reset and are now available for use.';
+        tokenSuccess.classList.remove('hidden');
+        
+        setTimeout(() => {
+            tokenSuccess.classList.add('hidden');
+        }, 3000);
+    }
+});
+
+function closeModal() {
+    document.getElementById('irsModal').classList.add('hidden');
+    document.getElementById('tokenInput').value = '';
+    document.getElementById('tokenInput').classList.remove('error');
+    document.getElementById('tokenInput').disabled = false;
+    document.getElementById('submitToken').disabled = false;
+    document.getElementById('tokenError').classList.add('hidden');
+    document.getElementById('tokenSuccess').classList.add('hidden');
+}
+    
+    // Time period buttons
+    document.querySelectorAll('.time-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const period = this.dataset.period;
+            Charts.updateChartPeriod(period);
+        });
+    });
+}
+
+// Update token display
+function updateTokenDisplay() {
+    const availableTokens = Auth.getAvailableTokens();
+    const usedTokens = Auth.getUsedTokens();
+    
+    document.getElementById('availableTokens').textContent = availableTokens.length;
+    document.getElementById('usedTokens').textContent = usedTokens.length;
+    
+    const tokenList = document.getElementById('availableTokensList');
+    tokenList.innerHTML = '';
+    
+    // Show available tokens
+    if (availableTokens.length > 0) {
+        const availableHeader = document.createElement('div');
+        availableHeader.className = 'small-text';
+        availableHeader.textContent = 'Available Tokens:';
+        tokenList.appendChild(availableHeader);
+        
+        availableTokens.forEach(token => {
+            const tokenEl = document.createElement('div');
+            tokenEl.className = 'token-item';
+            tokenEl.textContent = token.token;
+            tokenEl.title = 'Click to auto-fill';
+            tokenEl.style.cursor = 'pointer';
+            
+            tokenEl.addEventListener('click', function() {
+                document.getElementById('tokenInput').value = token.token;
+            });
+            
+            tokenList.appendChild(tokenEl);
+        });
+    }
+    
+    // Show used tokens (grayed out)
+    if (usedTokens.length > 0) {
+        const usedHeader = document.createElement('div');
+        usedHeader.className = 'small-text';
+        usedHeader.style.marginTop = '10px';
+        usedHeader.textContent = 'Used Tokens:';
+        tokenList.appendChild(usedHeader);
+        
+        usedTokens.forEach(token => {
+            const tokenEl = document.createElement('div');
+            tokenEl.className = 'token-item used';
+            const usedTime = token.usedAt ? new Date(token.usedAt).toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            }) : 'Unknown time';
+            tokenEl.textContent = `${token.token} (Used by ${token.issuedTo || 'unknown'} at ${usedTime})`;
+            tokenList.appendChild(tokenEl);
+        });
+    }
+}
+
+// Handle token submission
+function handleTokenSubmit() {
+    const tokenInput = document.getElementById('tokenInput');
+    const tokenError = document.getElementById('tokenError');
+    const tokenSuccess = document.getElementById('tokenSuccess');
+    const errorMessage = document.getElementById('errorMessage');
+    const submitBtn = document.getElementById('submitToken');
+    
+    // Clear previous messages
+    tokenError.classList.add('hidden');
+    tokenSuccess.classList.add('hidden');
+    
+    const token = tokenInput.value.trim();
+    
+    if (!token) {
+        errorMessage.textContent = 'Please enter a token';
+        tokenError.classList.remove('hidden');
+        return;
+    }
+    
+    const isValid = Auth.verifyIRSToken(token);
+    
+    if (isValid) {
+        // Show success message
+        tokenSuccess.classList.remove('hidden');
+        tokenInput.disabled = true;
+        submitBtn.disabled = true;
+        
+        // Activate token session
+        Auth.activateTokenSession();
+        
+        // Update display immediately
+        updateTokenDisplay();
+        
+        // Redirect after delay
+        setTimeout(() => {
+            closeModal();
+            window.location.href = 'irs-portal.html';
+        }, 1500);
+    } else {
+        // Show error with specific message
+        const tokenEntry = Auth.irsTokens.find(t => t.token === token);
+        if (tokenEntry && tokenEntry.used) {
+            const usedTime = tokenEntry.usedAt ? new Date(tokenEntry.usedAt).toLocaleDateString() : 'previously';
+            errorMessage.textContent = `Token already used by ${tokenEntry.issuedTo || 'another user'} on ${usedTime}`;
+        } else {
+            errorMessage.textContent = 'Invalid token. Please check and try again.';
+        }
+        
+        tokenError.classList.remove('hidden');
+        tokenInput.classList.add('error');
+        
+        // Shake animation
+        tokenInput.style.animation = 'shake 0.5s';
+        setTimeout(() => {
+            tokenInput.style.animation = '';
+        }, 500);
+        
+        // Update display
+        updateTokenDisplay();
+    }
+}
+
+function closeModal() {
+    document.getElementById('irsModal').classList.add('hidden');
+    document.getElementById('tokenInput').value = '';
+    document.getElementById('tokenInput').classList.remove('error');
+    document.getElementById('tokenInput').disabled = false;
+    document.getElementById('submitToken').disabled = false;
+    document.getElementById('tokenError').classList.add('hidden');
+    document.getElementById('tokenSuccess').classList.add('hidden');
+}
+        
+        function startSessionTimer() {
+            const timerElement = document.getElementById('sessionTimer');
+            let minutes = 14;
+            let seconds = 59;
+            
+            const timer = setInterval(() => {
+                timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        clearInterval(timer);
+                        Auth.logout();
+                        window.location.href = 'index.html';
+                    } else {
+                        minutes--;
+                        seconds = 59;
+                    }
+                } else {
+                    seconds--;
+                }
+            }, 1000);
+        }
+
+        
+    </script>
+</body>
+</html>
